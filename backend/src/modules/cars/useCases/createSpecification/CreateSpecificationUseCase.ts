@@ -13,8 +13,8 @@ class CreateSpecificationUseCase {
     @inject("SpecificationsRepository")
     private specificationsRepository: ISpecificationsRepository
   ) {}
-  execute({ description, name }: IRequest): void {
-    const specificationAlreadyExists = this.specificationsRepository.findByName(
+  async execute({ description, name }: IRequest): Promise<void> {
+    const specificationAlreadyExists = await this.specificationsRepository.findByName(
       name
     );
 
@@ -22,7 +22,7 @@ class CreateSpecificationUseCase {
       throw new Error("Specification already exists!");
     }
 
-    this.specificationsRepository.create({
+    await this.specificationsRepository.create({
       name,
       description,
     });
