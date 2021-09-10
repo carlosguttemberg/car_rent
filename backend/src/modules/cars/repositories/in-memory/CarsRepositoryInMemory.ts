@@ -1,5 +1,6 @@
 import { ICreateCarDTO } from "@modules/cars/dtos/ICreateCarDTO";
 import { Car } from "@modules/cars/infra/typeorm/entities/Car";
+import { AppError } from "@shared/errors/AppError";
 
 import { ICarsRepository } from "../ICarsRepository";
 
@@ -26,7 +27,6 @@ class CarsRepositoryInMemory implements ICarsRepository {
       fine_amount,
       name,
       license_plate,
-      id,
     });
 
     this.cars.push(car);
