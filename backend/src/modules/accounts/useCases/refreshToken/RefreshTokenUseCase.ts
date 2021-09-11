@@ -1,5 +1,5 @@
-import { sign, verify } from "jsonwebtoken";
-import { inject } from "tsyringe";
+import { sign, verify, decode } from "jsonwebtoken";
+import { inject, injectable } from "tsyringe";
 
 import auth from "@config/auth";
 import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
@@ -11,6 +11,7 @@ interface IPayload {
   email: string;
 }
 
+@injectable()
 class RefreshTokenUseCase {
   constructor(
     @inject("UsersTokensRepository")
@@ -20,7 +21,6 @@ class RefreshTokenUseCase {
   ) {}
   async execute(token: string): Promise<string> {
     const { email, sub } = verify(token, auth.secret_refresh_token) as IPayload;
-
     const user_id = sub;
 
     const userToken = await this.usersTokensRepository.findByUserIdAndRefreshToken(
@@ -34,7 +34,7 @@ class RefreshTokenUseCase {
 
     const refresh_token = sign({ email }, auth.secret_refresh_token, {
       subject: user_id,
-      expiresIn: auth.expires_refresh_token_days,
+      expiresIn: auth.expires_in_refresh_token,
     });
 
     const expires_date = this.dateProvider.addDays(
