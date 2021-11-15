@@ -37,7 +37,7 @@ jobs:
          yarn build
          
       - name: Cp files
-        run: cp backend/* ./
+        run: cp -r backend/* ./
         
       - uses: appleboy/scp-action@master
         with:
